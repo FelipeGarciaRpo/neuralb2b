@@ -9,7 +9,7 @@ const isPublicRoute = createRouteMatcher([
 const isOrgFreeRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
-  "org-selection(.*)"
+  "/org-selection(.*)"
 ])
 
 export default clerkMiddleware(async (auth, req)=>{
