@@ -2,6 +2,30 @@ import {withSentryConfig} from "@sentry/nextjs";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@workspace/ui"],
+    webpack: (config, { dev, isServer }) => {
+    if (dev) {
+      // Desactiva watch en archivos problemáticos
+      config.watchOptions = {
+        ...config.watchOptions,
+        ignored: [
+          '**/node_modules',
+          '**/.next',
+          ...(config.watchOptions?.ignored || [])
+        ]
+      }
+      
+      // Forzar reload completo en vez de HMR para global-error
+      if (!isServer) {
+        const originalEntry = config.entry
+        config.entry = async () => {
+          const entries = await originalEntry()
+          return entries
+        }
+      }
+    }
+    return config
+  },
+
 }
 
 export default withSentryConfig(nextConfig, {
