@@ -11,16 +11,16 @@ export const DashboardLayout = async ({children}: {children: React.ReactNode})=>
 
     return(
          <AuthGuard>
-      <OrganizationGuard>
-        <SidebarProvider defaultOpen={defaultOpen}>
-          <div className="flex w-full">
-            <DashboardSideBar />
-            <main className="flex flex-1 flex-col">
-              {children}
-            </main>
-          </div>
-        </SidebarProvider>
-      </OrganizationGuard>
-    </AuthGuard>
+          <OrganizationGuard>
+            <SidebarProvider defaultOpen={defaultOpen}>
+              <div className="flex w-full">
+                <DashboardSideBar />
+                <main className="flex flex-1 flex-col">
+                  {children}
+                </main>
+              </div>
+            </SidebarProvider>
+          </OrganizationGuard>
+        </AuthGuard>
     )
 }
