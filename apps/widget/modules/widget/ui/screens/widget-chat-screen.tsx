@@ -3,11 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
+import {useInfiniteScroll} from "@workspace/ui/hooks/use-infinite-scroll";
+import {InfiniteScrollTrigger} from "@workspace/ui/components/infinite-scroll-trigger";
+import {DiceBearAvatar} from "@workspace/ui/components/dicebar-avatar";
 import { Form, FormField } from "@workspace/ui/components/form";
 import {useThreadMessages, toUIMessages} from "@convex-dev/agent/react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { AlertTriangleIcon, ArrowLeftIcon, MenuIcon } from "lucide-react";
-import { contactSessionIdAtomFamily, conversationIdAtom, errorMessageAtom, organizationIdAtom, screenAtom } from "../../atoms/widget-atoms";
+import { ArrowLeftIcon, MenuIcon } from "lucide-react";
+import { contactSessionIdAtomFamily, conversationIdAtom, organizationIdAtom, screenAtom } from "../../atoms/widget-atoms";
 import { WidgetHeader } from "@/modules/ui/components/widget-heaer";
 import { Button } from "@workspace/ui/components/button";
 import { useAction, useQuery } from "convex/react";
@@ -48,6 +51,12 @@ export const WidgetChatScreen = ()=>{
         } : "skip",
         {initialNumItems: 10}
     );
+
+    const {topElementRef, handleLoadMore, canLoadMore, isLoadingMore} = useInfiniteScroll({
+        status: messages.status,
+        loadMore: messages.loadMore,
+        loadSize: 10
+    })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -90,6 +99,12 @@ export const WidgetChatScreen = ()=>{
             </WidgetHeader>
             <AIConversation>
                 <AIConversationContent>
+                    <InfiniteScrollTrigger
+                        canLoadMore={canLoadMore}
+                        isLoadingMore={isLoadingMore}
+                        onLoadMore={handleLoadMore}
+                        ref={topElementRef}
+                    />
                     {toUIMessages(messages.results ?? [])?.map((message)=>{
                         return (
                             <AIMessage
@@ -99,6 +114,14 @@ export const WidgetChatScreen = ()=>{
                                 <AIMessageContent>
                                     <AIResponse>{message.content}</AIResponse>
                                 </AIMessageContent>
+                                {message.role === "assistant" && (
+                                    <DiceBearAvatar
+                                        imageUrl="/logo.svg"
+                                        seed="assistant"
+                                        size={32}
+                                        // badgeImageUrl="/logo.svg"
+                                    />
+                                )}
                             </AIMessage>
                         )
                     })}
@@ -106,7 +129,7 @@ export const WidgetChatScreen = ()=>{
             </AIConversation>
             <Form {...form}>
                 <AIInput
-                    className="rounede-none border-x-0 border-b-0"
+                    className="rounded-none border-x-0 border-b-0"
                     onSubmit={form.handleSubmit(onSubmit)}
                 >
                     <FormField
