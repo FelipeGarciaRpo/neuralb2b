@@ -29,13 +29,13 @@ export const DiceBearAvatar = ({
         }
 
         const avatar = createAvatar(glass, {
-            seed: seed.toLocaleLowerCase().trim(),
+            seed: seed.toLowerCase().trim(),
             size,
         });
 
         return avatar.toDataUri();
 
-    },[seed, size]);
+    },[seed, size, imageUrl]);
 
     const badgeSize = Math.round(size*0.5);
     return (
@@ -46,7 +46,7 @@ export const DiceBearAvatar = ({
             {badgeImageUrl && (
                 <div 
                 className={cn("absolute right-0 bottom-0 flex items-center justify-center overflow-hidden rounded-full border-2 border-background bg-background", badgeClassName)} 
-                style={{width: badgeSize, height: badgeSize, transform: "translate(15%,15%"}}>
+                style={{width: badgeSize, height: badgeSize, transform: "translate(15%,15%)"}}>
                     <img
                         alt="Badge"
                         className="h-full w-full object-cover"
