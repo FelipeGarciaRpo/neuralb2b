@@ -19,7 +19,7 @@ export const WidgetInboxScreen = ()=>{
     const setConversationId = useSetAtom(conversationIdAtom);
     const organizationId = useAtomValue(organizationIdAtom);
     const contactSessionId = useAtomValue(
-        contactSessionIdAtomFamily(organizationId || "null")
+        contactSessionIdAtomFamily(organizationId || "")
     );
 
     const conversations = usePaginatedQuery(
